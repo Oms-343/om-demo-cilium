@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import Container from 'components/shared/container';
 import Heading from 'components/shared/heading';
@@ -14,29 +14,45 @@ import ScalableKubernetesIcon from './images/scalable-kubernetes.inline.svg';
 import VisibilityIcon from './images/visibility.inline.svg';
 import Item from './item/item';
 
+import { Popover, Transition } from '@headlessui/react';
+import classNames from 'classnames';
+import ChevronIcon from 'icons/chevrondown.inline.svg';
+
 const list = [
   {
     title: 'Networking',
+    icon: NativeSupportIcon,
     items: [
       {
         icon: NativeSupportIcon,
-        title: 'Service Load Balancing',
+        title: 'High Performance Networking',
         description: `<p>Kubernetes doesn't come with an implementation of Load Balancing. This is usually left as an exercise for your cloud provider or in private cloud environments an exercise for your networking team. Cilium can attract this traffic with BGP and accelerate leveraging XDP and eBPF. Together these technologies provide a very robust and secure implementation of Load Balancing.</p><p>Cilium and eBPF operate at the kernel layer. With this level of context we can make intelligent decisions about how to connect different workloads whether on the same node or between clusters. With eBPF and XDP Cilium enables significant improvements in latency and performance and eliminates the need for kube-proxy entirely.</p>`,
       },
       {
         icon: ScalableKubernetesIcon,
-        title: 'Scalable Kubernetes CNI',
+        title: 'Layer 4 Load Balancer',
         description: `Cilium’s control and data plane has been built from the ground up for large-scale and highly dynamic cloud native environments where 100s and even 1000s of containers are created and destroyed within seconds. Cilium’s control plane is highly optimized, running in Kubernetes clusters of up to 5K nodes and 100K pods. Cilium’s data plane uses eBPF for efficient load-balancing and incremental updates, avoiding the pitfalls of large iptables rulesets. Cilium is fully IPv6-aware.`,
       },
       {
         icon: ConnectivityIcon,
-        title: 'Multi-cluster Connectivity',
+        title: 'Cluster Mesh',
+        description: `With standard Kubernetes networking each cluster is an island, requiring proxies to connect workloads across clusters for the purposes of migration, disaster-recovery, or geographic locality. Cilium Cluster Mesh creates a single zone of connectivity for load-balancing, observability and security between nodes across multiple clusters, enabling simple, high-performance cross-cluster connectivity.`,
+      },
+      {
+        icon: ConnectivityIcon,
+        title: 'Kube Proxy replacement',
+        description: `With standard Kubernetes networking each cluster is an island, requiring proxies to connect workloads across clusters for the purposes of migration, disaster-recovery, or geographic locality. Cilium Cluster Mesh creates a single zone of connectivity for load-balancing, observability and security between nodes across multiple clusters, enabling simple, high-performance cross-cluster connectivity.`,
+      },
+      {
+        icon: ConnectivityIcon,
+        title: 'BGP',
         description: `With standard Kubernetes networking each cluster is an island, requiring proxies to connect workloads across clusters for the purposes of migration, disaster-recovery, or geographic locality. Cilium Cluster Mesh creates a single zone of connectivity for load-balancing, observability and security between nodes across multiple clusters, enabling simple, high-performance cross-cluster connectivity.`,
       },
     ],
   },
   {
     title: 'Observability',
+    icon: VisibilityIcon,
     items: [
       {
         icon: VisibilityIcon,
@@ -57,6 +73,7 @@ const list = [
   },
   {
     title: 'Security',
+    icon: EncryptionIcon,
     items: [
       {
         icon: EncryptionIcon,
@@ -82,20 +99,46 @@ const list = [
 const Highlights = () => (
   <section className="mt-10 md:mt-20 lg:mt-32">
     <Container className="grid grid-cols-[minmax(95%,max-content)] gap-4 sm:grid-cols-none md:gap-6 lg:grid-cols-3 lg:gap-8">
-      {list.map(({ title, items }, index) => (
-        <div key={index}>
-          <Heading tag="h2" size="sm">
-            {title}
-          </Heading>
-          <ul className="mt-6 grid grid-cols-1 gap-4 md:gap-6 lg:mt-9 lg:auto-rows-[130px] lg:gap-8 xl:auto-rows-fr">
-            {items.map((item, index) => (
-              <Item {...item} key={index} />
-            ))}
-          </ul>
-        </div>
+      {list.map(({ title, icon: Icon, items }, index) => (
+        <Popover as="li" className="scr relative list-none" key={index}>
+          {({ open }) => (
+            <>
+              <Popover.Button
+                className={classNames(
+                  'flex h-full w-full items-center rounded-lg border border-gray-3 p-4 transition duration-200 xl:p-5 xl:pl-6',
+                  open && 'rounded-b-none border-transparent shadow-primary'
+                )}
+              >
+                <Icon className="h-auto w-16 shrink-0 xl:w-max" />
+                <Heading className="text-2xl font-bold lg:text-3xl " size="3xs" tag="h2">
+                  {title}
+                </Heading>
+                <ChevronIcon className=" ui-open:rotate-180 ui-open:transform ml-auto h-6 w-auto shrink-0 " />
+              </Popover.Button>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-200"
+                enterFrom="opacity-0 translate-y-1"
+                enterTo="opacity-100 translate-y-0"
+                leave="transition ease-in duration-150"
+                leaveFrom="opacity-100 translate-y-0"
+                leaveTo="opacity-0 translate-y-1"
+              >
+                <Popover.Panel className="absolute left-1/2 top-[98%] z-10 w-full -translate-x-1/2 rounded-b-lg  bg-white px-6 text-left shadow-secondary ">
+                  <ul className="mt-6 grid grid-cols-1 gap-4  md:gap-6 lg:mt-9 lg:auto-rows-[130px] lg:gap-8 xl:auto-rows-fr">
+                    {items.map((item, index) => (
+                      <Item {...item} key={index} />
+                    ))}
+                  </ul>
+                </Popover.Panel>
+              </Transition>
+            </>
+          )}
+        </Popover>
       ))}
     </Container>
   </section>
 );
+//
 
 export default Highlights;

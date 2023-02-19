@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function BlogAuthor({ header, bio, theme }) {
+const BlogAuthor = ({ header, bio, theme }) => {
   const isPrimary = theme === 'primary';
   return (
     <div

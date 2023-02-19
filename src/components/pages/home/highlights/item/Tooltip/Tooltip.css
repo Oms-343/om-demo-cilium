@@ -1,0 +1,55 @@
+/* CSS Variables */
+:root {
+  --color-dark-100: hsla(200, 96%, 9%, 1);
+  --tooltip-triangle-size: 10px;
+  --color-acc22-100: hsla(91, 94%, 86%, 1);
+  --tooltip-margin: 35px;
+}
+
+/* Wrapping of the content for which tooltip is shown.
+  Position is kept relative, so that an absolute position
+  wrt to this can be used to position tooltip content.*/
+
+/*
+    Following tooltip and arrow will be configured for 4 positions.
+  */
+/* Absolute position of tooltip helps to position the tooltip relative to the element. */
+.Tooltip-Tip {
+  color: var(--color-acc22-100);
+  background: var(--color-dark-100);
+  position: absolute;
+  border-radius: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px;
+  font-size: 14px;
+  line-height: 1;
+  z-index: 9999;
+  white-space: nowrap;
+}
+
+/* CSS Bordered Triangle for Arrow*/
+.Tooltip-Tip::before {
+  content: ' ';
+  border-width: var(--tooltip-triangle-size);
+  margin-left: calc(var(--tooltip-triangle-size) * -1);
+  left: 50%;
+  border: solid transparent;
+  width: 0;
+  height: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.Tooltip-Tip.right {
+  top: 50%;
+  left: calc(100% + var(--tooltip-margin));
+  transform: translateX(0) translateY(-50%);
+}
+/* 2. Right tooltip-arrow*/
+.Tooltip-Tip.right::before {
+  top: 50%;
+  left: calc(var(--tooltip-triangle-size) * -1);
+  transform: translateX(0) translateY(-50%);
+  border-right-color: var(--color-dark-100);
+}

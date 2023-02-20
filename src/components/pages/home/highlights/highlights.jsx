@@ -17,11 +17,13 @@ import Item from './item/item';
 import { Popover, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import ChevronIcon from 'icons/chevrondown.inline.svg';
+import Link from 'components/shared/link/link';
 
 const list = [
   {
     title: 'Networking',
     icon: NativeSupportIcon,
+    route: '/network',
     items: [
       {
         icon: NativeSupportIcon,
@@ -53,6 +55,7 @@ const list = [
   {
     title: 'Observability',
     icon: VisibilityIcon,
+    route: '/observability',
     items: [
       {
         icon: VisibilityIcon,
@@ -74,6 +77,7 @@ const list = [
   {
     title: 'Security',
     icon: EncryptionIcon,
+    route: '/security',
     items: [
       {
         icon: EncryptionIcon,
@@ -99,7 +103,7 @@ const list = [
 const Highlights = () => (
   <section className="mt-10 md:mt-20 lg:mt-32">
     <Container className="grid grid-cols-[minmax(95%,max-content)] gap-4 sm:grid-cols-none md:gap-6 lg:grid-cols-3 lg:gap-8">
-      {list.map(({ title, icon: Icon, items }, index) => (
+      {list.map(({ title, icon: Icon, items, route }, index) => (
         <Popover as="li" className="scr relative list-none" key={index}>
           {({ open }) => (
             <>
@@ -110,9 +114,16 @@ const Highlights = () => (
                 )}
               >
                 <Icon className="h-auto w-16 shrink-0 xl:w-max" />
-                <Heading className="text-2xl font-bold lg:text-3xl " size="3xs" tag="h2">
-                  {title}
-                </Heading>
+                <Link to={route}>
+                  <Heading
+                    className="text-2xl font-bold hover:underline lg:text-3xl "
+                    size="3xs"
+                    tag="h2"
+                  >
+                    {title}
+                  </Heading>
+                </Link>
+
                 <ChevronIcon className=" ui-open:rotate-180 ui-open:transform ml-auto h-6 w-auto shrink-0 " />
               </Popover.Button>
               <Transition
